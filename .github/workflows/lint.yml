@@ -1,13 +1,22 @@
-name: Lint
-on: [push]
+name: Lint and Build Docker Image
+on:
+  push:
+    branches:
+      - main
 jobs:
-  lint:
+  build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Super-Linter
-      uses: github/super-linter@v4
-      env:
-        VALIDATE_ALL_CODEBASE: false
-        DEFAULT_BRANCH: main
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: your-docker-hub-username/your-repository-name:latest
+      - name: Super-Linter
+        uses: github/super-linter@v4
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: main
